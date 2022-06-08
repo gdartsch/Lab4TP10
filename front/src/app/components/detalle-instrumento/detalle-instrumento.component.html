@@ -7,10 +7,10 @@
         <a [routerLink]="['/instrumentos']" class="btn btn-outline-danger btn-block">Regresar</a>
     </div>  
     <div class="col-md-8">
-        <h3 style="color: crimson">{{instrumento.instrumento}}</h3>
+        <h3 style="color: crimson">{{instrumento.nombre}}</h3>
         <hr>
         <p><b>Cantidad Vendida:</b> ${{instrumento.cantidadVendida}}</p>
-        <p>{{instrumento.titulos}}</p>
+        
         <p><b>Precio:</b> ${{instrumento.precio}}</p>
         <p><b>Costo Envio:</b> {{instrumento.costoEnvio}}</p>
         <p><b>Marca:</b> {{instrumento.marca}}</p>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DeliveryService } from 'src/app/servicios/delivery.service';
 import { Router } from '@angular/router';
+import { Instrumento } from '../../entidades/Instrumento';
 
 @Component({
   selector: 'app-instrumentos',
@@ -9,18 +10,26 @@ import { Router } from '@angular/router';
 })
 export class InstrumentosComponent implements OnInit {
 
-  instrumentosArr:any[] = [];
+  instrumentos:Instrumento[] = [];
+  loading = true;
 
   constructor(private servicioDelivery:DeliveryService, private router:Router) { 
     
   }
 
   ngOnInit(): void {
-    this.instrumentosArr = this.servicioDelivery.getInstrumentos();
-    console.log(this.instrumentosArr);
+    this.servicioDelivery.getInstrumentosFromDataBase()
+    .subscribe(data => {
+      console.log(data);
+      for(let instrumento in data){
+        console.log(data[instrumento]);
+        this.instrumentos.push(data[instrumento]);
+      }
+      this.loading = false;
+    });
   }
 
-  public verInstrumento(idx:string){
+  public verInstrumento(idx:number){
     console.log("ID INSTRUMENTO " + idx);
     this.router.navigate(['/detalleInstrumento', idx])
   }

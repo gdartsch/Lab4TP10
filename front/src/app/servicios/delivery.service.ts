@@ -1,43 +1,77 @@
 import { Injectable } from '@angular/core';
-import  *  as  data  from  'src/assets/datos/instrumentos.json';
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { Instrumento } from '../entidades/Instrumento';
+import {map} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DeliveryService {
 
-  instrumentosFile:any  = (data  as  any).default;
+  public instrumentosData:Instrumento[]=[];
+  public instrumentoEncontrado!: Instrumento;
 
-  constructor() {
+  constructor(public http: HttpClient) {
     console.log("Servicio Cargado!!!");
-    console.log(this.instrumentosFile);
    }
-   
+
   public getInstrumentos():any[]{
-    return this.instrumentosFile;
-    console.log(this.instrumentosFile);
+    return this.instrumentosData;
+    console.log(this.instrumentosData);
   }
 
-  public getInstrumentoXId(idx:string):any{
-      for(let instrumento of this.instrumentosFile){
+  public getInstrumentoXId(idx:number):any{
+      for(let instrumento of this.instrumentosData){
           if(instrumento.id == idx){
             return instrumento;
-          } 
+          }
       }
   }
 
-  public buscarInstrumentos(termino:string):any[]{
-      let instrumentosArr:any[] = [];
-      termino = termino.toLowerCase();
 
-      for(let instrumento of this.instrumentosFile){
-        let nombre = instrumento.instrumento.toLowerCase();
-        if(nombre.indexOf(termino) >= 0){
-          instrumentosArr.push(instrumento);
-        }
+  getInstrumentosFromDataBase(){
+    return this.http.get("http://localhost:3001/api/instrumentos").pipe(
+      map( instrumentosData => instrumentosData as Instrumento[]));
+  }
 
+  getInstrumentoEnBaseDatosXId(idx:string){
+    return this.http.get("http://localhost:3001/api/instrumentos/" + idx).pipe(
+      map( instrumentoEncontrado => instrumentoEncontrado as Instrumento));
+  }
+
+  getInstrumentosBusquedaFromDataBase(termino:string){
+    return this.http.get("http://localhost:3001/api/instrumentos/busqueda/" + termino).pipe(
+      map( instrumentosSearch => instrumentosSearch as Instrumento[]));
+  }
+
+
+    async deleteInstrumentoFetch(idInstrumento: number){
+      let urlServer = 'http://localhost:3001/api/instrumentos/'+idInstrumento;
+      console.log(urlServer);
+      let result = await fetch(urlServer, {
+          method: 'DELETE',
+          headers: {
+              'Content-type': 'application/json',
+              'Access-Control-Allow-Origin':'*'
+          },
+          mode: 'cors'
+      });
+    }
+
+    async guardarPOST(instrumento:Instrumento) {
+      let urlServer = 'http://localhost:3001/api/instrumentos';
+      let method = "POST";
+      if(instrumento && instrumento.id > 0){
+        urlServer = 'http://localhost:3001/api/instrumentos' + instrumento.id;
+        method = "PUT";
       }
-      return instrumentosArr;
+      await fetch(urlServer, {
+        "method": method,
+        "body": JSON.stringify(instrumento),
+        "headers": {
+        "Content-Type": 'application/json'
+        }
+      });
     }
 }
 

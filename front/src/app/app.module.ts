@@ -14,6 +14,11 @@ import {NgbPaginationModule, NgbAlertModule} from '@ng-bootstrap/ng-bootstrap';
 import {DeliveryService} from './servicios/delivery.service';
 import { DetalleInstrumentoComponent } from './components/detalle-instrumento/detalle-instrumento.component';
 import { BuscadorComponent } from './components/buscador/buscador.component';
+import { HttpClientModule } from "@angular/common/http";
+import { InstrumentoAdminComponent } from './components/instrumento-admin/instrumento-admin.component';
+import { InstrumentoListaComponent } from './components/instrumento-lista/instrumento-lista.component';
+import { FormsModule } from '@angular/forms';
+import { KeysPipe } from './pipes/keys.pipe';
 
 @NgModule({
   declarations: [
@@ -23,13 +28,19 @@ import { BuscadorComponent } from './components/buscador/buscador.component';
     AboutComponent,
     InstrumentosComponent,
     DetalleInstrumentoComponent,
-    BuscadorComponent
+    BuscadorComponent,
+    InstrumentoAdminComponent,
+    InstrumentoListaComponent,
+    KeysPipe,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     NgbModule,
-    NgbPaginationModule, NgbAlertModule
+    NgbPaginationModule, 
+    NgbAlertModule,
+    HttpClientModule,
+    FormsModule
   ],
   providers: [DeliveryService],
   bootstrap: [AppComponent]

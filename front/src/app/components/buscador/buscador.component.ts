@@ -10,15 +10,20 @@ import { DeliveryService } from 'src/app/servicios/delivery.service';
 export class BuscadorComponent implements OnInit {
 
   instrumentosBusqueda:any = [];
-  termino?:string;
+  termino!:string;
 
   constructor(private activatedRoute:ActivatedRoute, private servicioDelivery:DeliveryService, private router:Router) { }
 
   ngOnInit(): void {
-
     this.activatedRoute.params.subscribe(params=>{
       this.termino = params['termino'];
-      this.instrumentosBusqueda = this.servicioDelivery.buscarInstrumentos(params['termino']);
+      this.servicioDelivery.getInstrumentosBusquedaFromDataBase(this.termino)
+      .subscribe(dataInstrumentos => {
+        this.instrumentosBusqueda = [];
+        for(let instrumento in dataInstrumentos){
+          this.instrumentosBusqueda.push(dataInstrumentos[instrumento]);
+        }
+      });
     });
   }
 
